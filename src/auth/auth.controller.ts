@@ -2,6 +2,7 @@ import { AuthService } from './auth.service';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -12,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ChangePasswordDto } from './dto/updatePassword.dto';
+import { DeleteDto } from './dto/delete-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -41,5 +43,15 @@ export class AuthController {
     const user: any = await this.authservice.verifyToken(token); // verify the jwt token. 
     const userEmail = user.payload.email; //get email from jwt authentication. 
     return this.authservice.updateUserData(userEmail, dto);
+  }
+  @Delete('delete')
+  async deleteUser(@Body() body:DeleteDto, @Req() req: Request,){
+      const token = req.cookies?.token;
+      if(!token){
+        throw new UnauthorizedException(); 
+      }
+      const user: any = await this.authservice.verifyToken(token);
+      const userEmail = user.payload.email;
+      return this.authservice.deleteUser(userEmail,body);
   }
 }

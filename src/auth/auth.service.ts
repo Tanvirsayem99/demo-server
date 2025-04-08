@@ -78,7 +78,27 @@ export class AuthService {
       where: { email: userEmail },
       data: { password: hashedNewPassword },
     });
-
     return { message: 'Password updated successfully' };
+  }
+
+
+  async deleteUser(email: string, password: any){
+    const user: any = await this.prisma.users.findUnique({
+      where: {
+        email: email,
+      }
+    })
+    if(!user){
+      throw new UnauthorizedException('User not found');
+    }
+    const isMatch = await bcrypt.compare(password.password, user.password);
+    if (!isMatch){
+      throw new UnauthorizedException('Current password is incorrect');
+    }
+    await this.prisma.users.delete({
+      where: { email: email },
+    });
+  
+    return { message: 'User deleted successfully' };
   }
 }
