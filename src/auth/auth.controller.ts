@@ -3,12 +3,15 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
+  Put,
   Req,
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { ChangePasswordDto } from './dto/updatePassword.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -30,5 +33,13 @@ export class AuthController {
     } catch {
       throw new UnauthorizedException();
     }
+  }
+  @Put('password')
+  async updatePassword(@Req() req: Request, @Body() dto: ChangePasswordDto) {
+    const token = req.cookies?.token; //get jwt token 
+    if (!token) throw new UnauthorizedException();
+    const user: any = await this.authservice.verifyToken(token); // verify the jwt token. 
+    const userEmail = user.payload.email; //get email from jwt authentication. 
+    return this.authservice.updateUserData(userEmail, dto);
   }
 }
