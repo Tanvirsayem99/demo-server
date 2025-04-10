@@ -15,7 +15,7 @@ export class UsersService {
             throw new BadRequestException('User with this email already exists.'); // if a user already exist then it will throw the request. 
         }
         const encyptedPassword = await bcrypt.hash(data.password, 10); // encrypted the password for extra security. 
-        return await this.prisma.users.create({       // here is prisma.user means call the user collection from the schema.prisma.  
+        const save = await this.prisma.users.create({       // here is prisma.user means call the user collection from the schema.prisma.  
             data : {
                 name : data.name,
                 email: data.email,
@@ -23,5 +23,6 @@ export class UsersService {
 
             }
         })
+        return {message:"Registration successfull"}
     }
 }

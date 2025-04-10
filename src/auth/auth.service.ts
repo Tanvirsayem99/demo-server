@@ -36,15 +36,16 @@ export class AuthService {
       email: user.email, // payload will save name and email, it will help us to get the user data fromo front end when we send a request from front-end with authentication using http cookies.
     };
     const token = this.jwt.sign({ payload });
-    res.cookie('token', token, {
+    res.cookie('myLoginToken', token, {
       // send jwt token through cookie.
       secure: true,
       httpOnly: true,
       sameSite: 'lax',
       maxAge: 1000 * 60 * 60, // expire time
     });
-
-    return { token };
+    
+    // return { name: user.name, email: user.email };
+    return {message: "Login Successfull"};
   }
   async verifyToken(token: string) {
     try {
@@ -98,7 +99,7 @@ export class AuthService {
     await this.prisma.users.delete({
       where: { email: email },
     });
-  
     return { message: 'User deleted successfully' };
   }
+  
 }
