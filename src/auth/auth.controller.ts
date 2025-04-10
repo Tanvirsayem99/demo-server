@@ -58,7 +58,12 @@ export class AuthController {
   }
   @Post('logout')
 logout(@Res({ passthrough: true }) res: Response) {
-  res.clearCookie('myLoginToken');
+  // res.clearCookie('myLoginToken');
+  res.clearCookie('myLoginToken', {
+    httpOnly: true,
+    secure: true, // same as when you set it
+    sameSite: 'none', // must match original settings
+  });
   return { message: 'Logged out successfully' };
 }
 }

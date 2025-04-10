@@ -6,7 +6,7 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://localhost:3000', // Allow frontend
+    origin: 'https://peaceful-haupia-504a3d.netlify.app', // Allow frontend
     credentials: true,              // If you're using cookies or auth headers
   });
   app.use(cookieParser());
