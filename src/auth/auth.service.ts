@@ -40,7 +40,7 @@ export class AuthService {
       // send jwt token through cookie.
       secure: true,
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: "none",
       maxAge: 1000 * 60 * 60, // expire time
     });
     
