@@ -45,14 +45,16 @@ export class AuthController {
     return this.authservice.updateUserData(userEmail, dto);
   }
   @Delete('delete')
-  async deleteUser(@Body() body:DeleteDto, @Req() req: Request,){
+  async deleteUser(@Body() body:DeleteDto, @Req() req: Request,@Res({ passthrough: true }) res: Response){
       const token = req.cookies?.myLoginToken;
       if(!token){
         throw new UnauthorizedException(); 
       }
       const user: any = await this.authservice.verifyToken(token);
-      const userEmail = user.payload.email;
-      return this.authservice.deleteUser(userEmail,body);
+      const userEmail = user.payload.email;res.clearCookie('myLoginToken');
+      this.authservice.deleteUser(userEmail,body)
+      return { message: 'Delete the user' }
+       
   }
   @Post('logout')
 logout(@Res({ passthrough: true }) res: Response) {
